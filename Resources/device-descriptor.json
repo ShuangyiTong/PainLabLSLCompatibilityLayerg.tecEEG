@@ -1,0 +1,14 @@
+﻿{
+  "name": "g.tec EEG 8 channel LSL Compatible",
+  "device_id": "e4LfX1TZKj0dhX0yCaTh",
+  "device_type": "GTEC_EEG_8_CHAN_LSL_COMP",
+  "data_to_report": {
+    "EEG": [ 8, "float" ]
+  },
+  "data_to_control":  {},
+  "report_pack_order": null,
+  "control_pack_order": null,
+  "visual_report": {
+    "EEG": "static"
+  }
+}
