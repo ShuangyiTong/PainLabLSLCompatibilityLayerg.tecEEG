@@ -13,14 +13,35 @@ namespace PainLabDeviceLSLCompatialeLayer
     [Serializable]
     class LSLDataFrame
     {
-        public double[] EEG;
+        public double[] CZ;
+        public double[] Ch2;
+        public double[] Ch3;
+        public double[] Ch4;
+        public double[] Ch5;
+        public double[] Ch6;
+        public double[] Ch7;
+        public double[] Ch8;
 
-        public LSLDataFrame(float[] sample)
+        public LSLDataFrame(float[][] sample)
         {
-            EEG = new double[sample.Length];
+            CZ = new double[sample.Length];
+            Ch2 = new double[sample.Length];
+            Ch3 = new double[sample.Length];
+            Ch4 = new double[sample.Length];
+            Ch5 = new double[sample.Length];
+            Ch6 = new double[sample.Length];
+            Ch7 = new double[sample.Length];
+            Ch8 = new double[sample.Length];
             for (int i = 0; i < sample.Length; i++)
             {
-                EEG[i] = (double)sample[i];
+                CZ[i] = (double)sample[i][0];
+                Ch2[i] = (double)sample[i][1];
+                Ch3[i] = (double)sample[i][2];
+                Ch4[i] = (double)sample[i][3];
+                Ch5[i] = (double)sample[i][4];
+                Ch6[i] = (double)sample[i][5];
+                Ch7[i] = (double)sample[i][6];
+                Ch8[i] = (double)sample[i][7];
             }
         }
     }
@@ -35,7 +56,7 @@ namespace PainLabDeviceLSLCompatialeLayer
 
             return;
         }
-        public byte[] PrepareDataFrameBytes(float[] sample)
+        public byte[] PrepareDataFrameBytes(float[][] sample)
         {
             LSLDataFrame dataFrame = new LSLDataFrame(sample);
             byte[] byteData = StringToBytes(JsonConvert.SerializeObject(dataFrame, Formatting.None));
@@ -46,6 +67,7 @@ namespace PainLabDeviceLSLCompatialeLayer
     class Program
     {
         static string networkConfigPath = "Resources/network-config.json";
+        static int subFramePerFrame = 20;
         static void Main(string[] args)
         {
             PainlabLSLCompatiblilityProtocol protocol = new PainlabLSLCompatiblilityProtocol();
@@ -60,14 +82,25 @@ namespace PainLabDeviceLSLCompatialeLayer
             // open an inlet and print some interesting info about the stream (meta-data, etc.)
             StreamInlet inlet = new StreamInlet(results[0]);
             results.DisposeArray();
-            System.Console.Write(inlet.info().as_xml());
+            //System.Console.Write(inlet.info().as_xml());
 
+            float[][] sample = new float[subFramePerFrame][];
+            for (int i = 0; i < subFramePerFrame; i++)
+            {
+                sample[i] = new float[8];
+            }
+            int subframe_counter = 0;
             // read samples
             while (true)
             {
-                float[] sample = new float[8];
-                inlet.pull_sample(sample);
-                protocol.UpdateFrameData(protocol.PrepareDataFrameBytes(sample));
+                inlet.pull_sample(sample[subframe_counter]);
+                subframe_counter++;
+                if (subframe_counter >= subFramePerFrame)
+                {
+                    protocol.UpdateFrameData(protocol.PrepareDataFrameBytes(sample));
+                    subframe_counter = 0;
+                }
+                
             }
         }
     }

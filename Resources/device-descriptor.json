@@ -3,12 +3,29 @@
   "device_id": "e4LfX1TZKj0dhX0yCaTh",
   "device_type": "GTEC_EEG_8_CHAN_LSL_COMP",
   "data_to_report": {
-    "EEG": [ 8, "float" ]
+    "CZ": "float",
+    "Ch2": "float",
+    "Ch3": "float",
+    "Ch4": "float",
+    "Ch5": "float",
+    "Ch6": "float" ,
+    "Ch7": "float",
+    "Ch8": "float"
   },
-  "data_to_control":  {},
-  "report_pack_order": null,
+  "data_to_control": {},
+  "report_pack_order": {
+    "packed": 20,
+    "order": null
+  },
   "control_pack_order": null,
   "visual_report": {
-    "EEG": "static"
+    "CZ": "line_chart",
+    "Ch2": "line_chart",
+    "Ch3": "line_chart",
+    "Ch4": "line_chart",
+    "Ch5": "line_chart",
+    "Ch6": "line_chart",
+    "Ch7": "line_chart",
+    "Ch8": "line_chart"
   }
 }
